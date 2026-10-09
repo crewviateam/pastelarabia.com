@@ -1,0 +1,1 @@
+import { db } from './src/db/index.js'; import * as s from './src/db/schema.js'; async function run() { const users = await db.select({id: s.users.id, name: s.users.name}).from(s.users); console.log(users); process.exit(0); } run();

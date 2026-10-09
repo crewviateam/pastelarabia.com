@@ -1,0 +1,50 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:seed": "tsx src/db/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1147.0",
+    "@aws-sdk/s3-request-presigner": "^3.1147.0",
+    "@hono/node-server": "^2.1.3",
+    "@hono/node-ws": "^1.3.1",
+    "@langchain/core": "^1.2.17",
+    "@langchain/groq": "^1.3.1",
+    "@langchain/langgraph": "^1.4.21",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^18.0.6",
+    "drizzle-orm": "^0.45.3",
+    "hono": "^4.13.13",
+    "jsonwebtoken": "^9.0.3",
+    "openai": "^7.30.0",
+    "postgres": "^3.4.9",
+    "qrcode": "^1.5.4",
+    "uuid": "^14.0.2",
+    "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js#main",
+    "ws": "^8.22.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^26.6.4",
+    "@types/qrcode": "^1.5.6",
+    "@types/uuid": "^10.0.0",
+    "@types/ws": "^8.18.2",
+    "drizzle-kit": "^0.31.11",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
