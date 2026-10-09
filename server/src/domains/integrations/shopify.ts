@@ -3,7 +3,7 @@ import { db } from '../../db';
 import * as s from '../../db/schema';
 import { eq, sql } from 'drizzle-orm';
 
-const shopify = new Hono();
+const shopify = new Hono<{ Variables: { user: any } }>();
 
 shopify.post('/webhook/orders-create', async (c) => {
   try {

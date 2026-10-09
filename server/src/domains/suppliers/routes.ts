@@ -3,7 +3,7 @@ import { eq, sql, desc, asc, ilike, and, or } from 'drizzle-orm';
 import { db } from '../../db';
 import * as s from '../../db/schema';
 
-const suppliers = new Hono();
+const suppliers = new Hono<{ Variables: { user: any } }>();
 
 // GET /api/suppliers
 suppliers.get('/', async (c) => {

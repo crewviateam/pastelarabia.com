@@ -5,7 +5,7 @@ import { db } from '../../db';
 import { users } from '../../db/schema';
 import { generateToken, authMiddleware, JWTPayload } from '../../shared/auth';
 
-const auth = new Hono();
+const auth = new Hono<{ Variables: { user: any } }>();
 
 // POST /api/auth/login
 auth.post('/login', async (c) => {

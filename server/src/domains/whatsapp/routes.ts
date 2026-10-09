@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { isWhatsappReady, qrCodeDataUrl, logoutWhatsApp, getWhatsappInfo, whatsappError } from '../../shared/whatsapp';
 import { authMiddleware } from '../../shared/auth';
 
-const whatsappRoutes = new Hono();
+const whatsappRoutes = new Hono<{ Variables: { user: any } }>();
 whatsappRoutes.use('*', authMiddleware);
 
 whatsappRoutes.get('/status', (c) => {

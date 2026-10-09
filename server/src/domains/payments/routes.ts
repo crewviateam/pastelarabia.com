@@ -4,7 +4,7 @@ import { db } from '../../db';
 import * as s from '../../db/schema';
 import { authMiddleware } from '../../shared/auth';
 
-const payments = new Hono();
+const payments = new Hono<{ Variables: { user: any } }>();
 payments.use('*', authMiddleware);
 
 // GET /api/payments

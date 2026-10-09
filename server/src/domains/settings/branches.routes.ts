@@ -4,7 +4,7 @@ import { db } from '../../db';
 import * as s from '../../db/schema';
 import { authMiddleware, roleGuard } from '../../shared/auth';
 
-const branches = new Hono();
+const branches = new Hono<{ Variables: { user: any } }>();
 
 // All routes require auth
 branches.use('*', authMiddleware);
@@ -42,7 +42,7 @@ branches.get('/all', roleGuard('owner', 'manager'), async (c) => {
 branches.get('/:id', async (c) => {
   const id = c.req.param('id');
   const [branch] = await db.select().from(s.branches)
-    .where(eq(s.branches.id, id)).limit(1);
+    .where(eq(s.branches.id, id as string)).limit(1);
   if (!branch) return c.json({ error: 'Branch not found' }, 404);
 
   // Get stats
@@ -125,7 +125,7 @@ branches.put('/:id', roleGuard('owner', 'manager'), async (c) => {
     managerId: body.managerId,
     invoicePrefix: body.invoicePrefix,
     updatedAt: new Date(),
-  }).where(eq(s.branches.id, id)).returning();
+  }).where(eq(s.branches.id, id as string)).returning();
 
   if (!updated) return c.json({ error: 'Branch not found' }, 404);
   return c.json(updated);
@@ -139,7 +139,7 @@ branches.patch('/:id/status', roleGuard('owner', 'manager'), async (c) => {
   const [updated] = await db.update(s.branches).set({
     status,
     updatedAt: new Date(),
-  }).where(eq(s.branches.id, id)).returning();
+  }).where(eq(s.branches.id, id as string)).returning();
 
   if (!updated) return c.json({ error: 'Branch not found' }, 404);
 

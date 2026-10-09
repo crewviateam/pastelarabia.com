@@ -129,7 +129,7 @@ export const requestPurchaseOrderDetailsTool = tool(
     // Get all vendors/suppliers
     const suppliers = await db.select({ id: s.suppliers.id, name: s.suppliers.name }).from(s.suppliers);
     
-    let productsList = [];
+    let productsList: any[] = [];
     if (!productId) {
       productsList = await db.select({ id: s.products.id, name: s.products.name }).from(s.products);
     }

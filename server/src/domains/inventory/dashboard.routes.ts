@@ -3,7 +3,7 @@ import { sql, eq, desc, asc, lt, lte, gte, and, count, sum } from 'drizzle-orm';
 import { db } from '../../db';
 import * as s from '../../db/schema';
 
-const dashboard = new Hono();
+const dashboard = new Hono<{ Variables: { user: any } }>();
 
 // GET /api/dashboard/stats
 dashboard.get('/stats', async (c) => {
@@ -96,11 +96,11 @@ dashboard.get('/sales-chart', async (c) => {
     ORDER BY date
   `);
 
-  const sales = (salesData.rows || salesData).map((d: any) => ({
+  const sales = ((salesData as any).rows || salesData).map((d: any) => ({
     ...d,
     revenue: parseFloat(d.revenue)
   }));
-  const expenses = (expenseData.rows || expenseData).map((d: any) => ({
+  const expenses = ((expenseData as any).rows || expenseData).map((d: any) => ({
     ...d,
     total: parseFloat(d.total)
   }));
@@ -289,13 +289,13 @@ dashboard.get('/advanced', async (c) => {
   `);
 
   return c.json({
-    variantVelocity: velocityData.rows || velocityData,
-    expiryExposure: (expiryData.rows || expiryData)[0] || { expires_3m: 0, expires_6m: 0, safe: 0 },
-    marginsTrend: marginsData.rows || marginsData,
-    channelSplit: channelSplit.rows || channelSplit,
-    stockoutRisk: stockoutRisk.rows || stockoutRisk,
-    deadStock: deadStock.rows || deadStock,
-    categoryMomentum: categoryMomentum.rows || categoryMomentum
+    variantVelocity: (velocityData as any).rows || velocityData,
+    expiryExposure: ((expiryData as any).rows || expiryData)[0] || { expires_3m: 0, expires_6m: 0, safe: 0 },
+    marginsTrend: (marginsData as any).rows || marginsData,
+    channelSplit: (channelSplit as any).rows || channelSplit,
+    stockoutRisk: (stockoutRisk as any).rows || stockoutRisk,
+    deadStock: (deadStock as any).rows || deadStock,
+    categoryMomentum: (categoryMomentum as any).rows || categoryMomentum
   });
 });
 

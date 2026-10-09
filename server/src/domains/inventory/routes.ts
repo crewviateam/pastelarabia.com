@@ -4,7 +4,7 @@ import { db } from '../../db';
 import * as s from '../../db/schema';
 import { uploadFile, getSignedFileUrl } from '../../shared/s3';
 
-const inventory = new Hono();
+const inventory = new Hono<{ Variables: { user: any } }>();
 
 // GET /api/products — list all products with filters
 inventory.get('/products', async (c) => {
@@ -395,7 +395,7 @@ inventory.get('/brands', async (c) => {
 inventory.post('/brands', async (c) => {
   const body = await c.req.json();
   const [brand] = await db.insert(s.brands)
-    .values({ name: body.name, manufacturer: body.manufacturer || null })
+    .values({ name: body.name })
     .returning();
   return c.json(brand);
 });

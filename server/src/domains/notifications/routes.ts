@@ -4,7 +4,7 @@ import { db } from '../../db';
 import * as s from '../../db/schema';
 import { authMiddleware } from '../../shared/auth';
 
-const notifications = new Hono();
+const notifications = new Hono<{ Variables: { user: any } }>();
 notifications.use('*', authMiddleware);
 
 // GET /api/notifications

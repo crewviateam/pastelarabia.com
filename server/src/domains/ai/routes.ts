@@ -4,7 +4,7 @@ import { db } from '../../db';
 import * as s from '../../db/schema';
 import { groqClient, MODEL } from '../../shared/ai';
 
-const ai = new Hono();
+const ai = new Hono<{ Variables: { user: any } }>();
 
 import { agentApp } from './agent';
 
@@ -57,7 +57,7 @@ Always let the user know what you have done.`;
       const msg = finalState.messages[i];
       if (msg._getType() === 'tool') {
          try {
-           const parsed = JSON.parse(msg.content);
+           const parsed = JSON.parse(msg.content as string);
            if (parsed.widget) {
              widget = parsed.widget;
            }
@@ -66,7 +66,7 @@ Always let the user know what you have done.`;
       }
     }
 
-    return c.json({ response: lastMessage.content, widget });
+    return c.json({ response: lastMessage.content as string, widget });
   } catch (error: any) {
     console.error('AI error:', error);
     return c.json({ response: 'Sorry, I encountered an error while processing your request.' }, 500);

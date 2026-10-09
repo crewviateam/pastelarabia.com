@@ -6,7 +6,7 @@ import { authMiddleware } from '../../shared/auth';
 import { sendWhatsAppPdf } from '../../shared/whatsapp';
 import { generateInvoicePdfBuffer } from '../../shared/pdfGenerator';
 
-const invoicing = new Hono();
+const invoicing = new Hono<{ Variables: { user: any } }>();
 invoicing.use('*', authMiddleware);
 
 // GET /api/invoices

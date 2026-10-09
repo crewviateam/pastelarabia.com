@@ -4,7 +4,7 @@ import { db } from '../../db';
 import * as s from '../../db/schema';
 import { authMiddleware } from '../../shared/auth';
 
-const chatRoutes = new Hono();
+const chatRoutes = new Hono<{ Variables: { user: any } }>();
 chatRoutes.use('*', authMiddleware);
 
 // GET /api/chat/users
