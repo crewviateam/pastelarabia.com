@@ -1,8 +1,8 @@
-import puppeteer from 'puppeteer-core';
+import puppeteer from 'puppeteer';
 
 export const generateInvoicePdfBuffer = async (invoiceData: any): Promise<Buffer> => {
   const browser = await puppeteer.launch({
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || (process.platform === 'win32' ? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe' : '/usr/bin/google-chrome'),
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || (process.platform === 'win32' ? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe' : undefined),
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });

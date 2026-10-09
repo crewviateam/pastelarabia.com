@@ -1,1 +1,0 @@
-import { db } from './src/db/index.js'; import * as s from './src/db/schema.js'; async function run() { const c = await db.select().from(s.chatConversations); console.log(c); process.exit(0); } run();
