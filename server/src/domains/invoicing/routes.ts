@@ -266,7 +266,7 @@ invoicing.get('/:id/pdf', async (c) => {
   const invoiceDataForPdf = { ...fullInvoice, items, businessSettings: settings };
   const pdfBuffer = await generateInvoicePdfBuffer(invoiceDataForPdf);
 
-  return c.body(pdfBuffer, 200, {
+  return c.body(pdfBuffer as any, 200, {
     'Content-Type': 'application/pdf',
     'Content-Disposition': `attachment; filename="Invoice_${fullInvoice.invoiceNumber}.pdf"`,
   });

@@ -1,3 +1,4 @@
+import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import {
@@ -59,8 +60,8 @@ export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean, onClose
 
       <nav className="sidebar-nav">
         {(() => {
-          const elements: JSX.Element[] = [];
-          let currentSection: JSX.Element | null = null;
+          const elements: React.ReactNode[] = [];
+          let currentSection: React.ReactNode | null = null;
 
           navItems.forEach((item, index) => {
             if ('section' in item && !('path' in item)) {
