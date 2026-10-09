@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../lib/api';
-import { Smartphone, CheckCircle, RefreshCcw } from 'lucide-react';
+import { Smartphone, CheckCircle, RefreshCcw, Database, Save } from 'lucide-react';
 import { useToast } from '../contexts/ToastContext';
 
 export default function SettingsPage() {
@@ -9,6 +9,8 @@ export default function SettingsPage() {
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [tallySettings, setTallySettings] = useState({ tallyEnabled: false, tallyServerUrl: 'http://localhost:9000', tallyCompanyName: '' });
+  const [savingTally, setSavingTally] = useState(false);
 
   const fetchStatus = async () => {
     try {
@@ -35,6 +37,31 @@ export default function SettingsPage() {
     }
   };
 
+  const fetchTallySettings = async () => {
+    try {
+      const res = await api.get('/settings');
+      setTallySettings({
+        tallyEnabled: res.tallyEnabled,
+        tallyServerUrl: res.tallyServerUrl || 'http://localhost:9000',
+        tallyCompanyName: res.tallyCompanyName || ''
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const saveTallySettings = async () => {
+    setSavingTally(true);
+    try {
+      await api.put('/settings', tallySettings);
+      success('Tally ERP 9 Integration settings saved!');
+    } catch (err: any) {
+      showError('Failed to save Tally settings', err.message);
+    } finally {
+      setSavingTally(false);
+    }
+  };
+
   const handleLogout = async () => {
     setLoggingOut(true);
     try {
@@ -51,6 +78,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     fetchStatus();
+    fetchTallySettings();
     const interval = setInterval(fetchStatus, 5000);
     return () => clearInterval(interval);
   }, []);
@@ -64,7 +92,7 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <div className="grid-3" style={{ gap: 'var(--space-xl)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 'var(--space-xl)' }}>
         <div className="card">
           <div className="card-header flex items-center justify-between">
             <div className="flex items-center gap-sm">
@@ -121,6 +149,63 @@ export default function SettingsPage() {
                 <div className="cell-muted" style={{ fontSize: 'var(--text-xs)' }}>Please wait a moment</div>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* TALLY INTEGRATION */}
+        <div className="card">
+          <div className="card-header flex items-center justify-between">
+            <div className="flex items-center gap-sm">
+              <Database size={20} className="text-primary" />
+              <h3 className="card-title" style={{ margin: 0 }}>Tally ERP 9 Integration</h3>
+            </div>
+            <button className="btn btn-primary btn-sm" onClick={saveTallySettings} disabled={savingTally}>
+              <Save size={16} /> {savingTally ? 'Saving...' : 'Save Settings'}
+            </button>
+          </div>
+          <div className="card-body">
+            <p className="cell-muted" style={{ marginBottom: 24 }}>
+              Automatically sync passed invoices and payments directly to your Tally Server.
+            </p>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+              <input 
+                type="checkbox" 
+                id="tallyEnabled" 
+                checked={tallySettings.tallyEnabled}
+                onChange={(e) => setTallySettings({ ...tallySettings, tallyEnabled: e.target.checked })}
+                style={{ width: 20, height: 20, cursor: 'pointer' }}
+              />
+              <label htmlFor="tallyEnabled" style={{ fontWeight: 600, margin: 0, cursor: 'pointer' }}>Enable Auto-Sync to Tally</label>
+            </div>
+
+            <div className="form-group" style={{ marginBottom: 16 }}>
+              <label style={{ display: 'block', marginBottom: 8, fontWeight: 500 }}>Tally Server URL (e.g. http://localhost:9000)</label>
+              <input 
+                type="text" 
+                className="form-input" 
+                value={tallySettings.tallyServerUrl}
+                onChange={(e) => setTallySettings({ ...tallySettings, tallyServerUrl: e.target.value })}
+                disabled={!tallySettings.tallyEnabled}
+                placeholder="http://localhost:9000"
+              />
+            </div>
+            
+            <div className="form-group" style={{ marginBottom: 16 }}>
+              <label style={{ display: 'block', marginBottom: 8, fontWeight: 500 }}>Tally Company Name</label>
+              <input 
+                type="text" 
+                className="form-input" 
+                value={tallySettings.tallyCompanyName}
+                onChange={(e) => setTallySettings({ ...tallySettings, tallyCompanyName: e.target.value })}
+                disabled={!tallySettings.tallyEnabled}
+                placeholder="Exact company name in Tally"
+              />
+            </div>
+            
+            <div className="cell-muted" style={{ fontSize: 'var(--text-xs)', marginTop: 8 }}>
+              Note: The backend must have network access to the Tally XML port. If you are running Tally locally, ensure the network port is forwarded or accessible.
+            </div>
           </div>
         </div>
       </div>

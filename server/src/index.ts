@@ -17,6 +17,7 @@ import suppliers from './domains/suppliers/routes';
 import sales from './domains/sales/routes';
 import ai from './domains/ai/routes';
 import branches from './domains/settings/branches.routes';
+import settings from './domains/settings/routes';
 import purchases from './domains/purchasing/routes';
 import invoicing from './domains/invoicing/routes';
 import payments from './domains/payments/routes';
@@ -25,6 +26,7 @@ import chatRoutes from './domains/chat/routes';
 import notifications from './domains/notifications/routes';
 import whatsappRoutes from './domains/whatsapp/routes';
 import shopify from './domains/integrations/shopify';
+import storeRoutes from './domains/storefront/routes';
 import { initWhatsApp, whatsappClient } from './shared/whatsapp';
 
 // Initialize WhatsApp Client (in background)
@@ -60,7 +62,7 @@ app.use('*', cors({
 const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({ app });
 
 // Store active connections for broadcasting
-const activeConnections = new Map<string, { ws: any; userId: string }>();
+export const activeConnections = new Map<string, { ws: any; userId: string }>();
 
 // WebSocket Chat Endpoint
 app.get('/ws/chat', upgradeWebSocket((c) => {
@@ -190,6 +192,7 @@ app.route('/api/suppliers', suppliers);
 app.route('/api/sales', sales);
 app.route('/api/ai', ai);
 app.route('/api/branches', branches);
+app.route('/api/settings', settings);
 app.route('/api/purchases', purchases);
 app.route('/api/invoices', invoicing);
 app.route('/api/payments', payments);
@@ -198,6 +201,7 @@ app.route('/api/chat', chatRoutes);
 app.route('/api/notifications', notifications);
 app.route('/api/whatsapp', whatsappRoutes);
 app.route('/api/integrations/shopify', shopify);
+app.route('/api/store', storeRoutes);
 
 app.get('/', (c) => {
   return c.text('Glow Wholesale API is running!');

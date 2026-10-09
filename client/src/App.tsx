@@ -26,6 +26,10 @@ import AnalyticsPage from './pages/AnalyticsPage';
 import AIAssistantPage from './pages/AIAssistantPage';
 import ChatPage from './pages/ChatPage';
 import StorefrontPreviewPage from './pages/StorefrontPreviewPage';
+import StoreLayout from './pages/store/StoreLayout';
+import StoreHomePage from './pages/store/StoreHomePage'; // Fix IDE TS cache
+import StoreProductPage from './pages/store/StoreProductPage';
+import StoreCheckoutPage from './pages/store/StoreCheckoutPage';
 import { ReactNode } from 'react';
 
 import SettingsPage from './pages/SettingsPage';
@@ -92,9 +96,16 @@ export default function App() {
               <Route path="ai" element={<AIAssistantPage />} />
               <Route path="analytics" element={<AnalyticsPage />} />
               <Route path="reports" element={<PlaceholderPage title="Reports" />} />
-              <Route path="website" element={<StorefrontPreviewPage />} />
               <Route path="settings" element={<SettingsPage />} />
             </Route>
+
+            {/* Public Storefront Routes */}
+            <Route path="/shop" element={<StoreLayout />}>
+              <Route index element={<StoreHomePage />} />
+              <Route path="product/:id" element={<StoreProductPage />} />
+              <Route path="checkout" element={<StoreCheckoutPage />} />
+            </Route>
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </ToastProvider>

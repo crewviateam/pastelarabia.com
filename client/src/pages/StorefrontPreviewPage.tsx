@@ -144,7 +144,7 @@ export default function StorefrontPreviewPage() {
 
   return (
     <div className="page-container" style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#f9fafb', padding: 0 }}>
-      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 32px', background: 'white', borderBottom: '1px solid var(--color-border)' }}>
+      <header className="store-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 32px', background: 'white', borderBottom: '1px solid var(--color-border)' }}>
         <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-primary)' }}>GLOW STOREFRONT</h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => setIsLoggedIn(!isLoggedIn)}>

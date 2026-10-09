@@ -32,11 +32,11 @@ const navItems = [
   { path: '/reports', icon: ClipboardList, label: 'Reports', module: 'analytics' },
   
   { section: 'Other' },
-  { path: '/website', icon: Globe, label: 'Website' },
+  { path: '/shop', icon: Globe, label: 'Website', external: true },
   { path: '/settings', icon: Settings, label: 'Settings' },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean, onClose?: () => void }) {
   const { user, logout, hasPermission } = useAuth();
   const location = useLocation();
 
@@ -48,8 +48,8 @@ export default function Sidebar() {
     .toUpperCase() || '?';
 
   return (
-    <aside className="app-sidebar">
-      <div className="sidebar-brand" style={{ padding: '24px 20px', borderBottom: '1px solid var(--color-border)', marginBottom: '16px' }}>
+    <aside className={`app-sidebar ${isOpen ? 'open' : ''}`}>
+      <div className="sidebar-brand" style={{ padding: '24px 20px 0px 20px', borderBottom: '1px solid var(--color-border)', paddingBottom: '16px' }}>
         <img 
           src="http://pastelarabia.com/cdn/shop/files/logo-web-2_8f4ec679-b112-4844-8251-c731f207ff07.png" 
           alt="Pastel Arabia Wholesale" 
@@ -58,43 +58,75 @@ export default function Sidebar() {
       </div>
 
       <nav className="sidebar-nav">
-        {navItems.map((item, i) => {
-          if ('section' in item && !('path' in item)) {
-            return (
-              <div key={i} className="sidebar-section-title">
-                {item.section}
-              </div>
-            );
-          }
+        {(() => {
+          const elements: JSX.Element[] = [];
+          let currentSection: JSX.Element | null = null;
 
-          if ('path' in item) {
-            // Check permissions
-            if ('module' in item && item.module) {
-              if (!hasPermission(item.module)) return null;
+          navItems.forEach((item, index) => {
+            if ('section' in item && !('path' in item)) {
+              currentSection = (
+                <div 
+                  key={`section-${index}`} 
+                  style={{ 
+                    padding: '24px 20px 8px 20px', 
+                    fontSize: '11px', 
+                    fontWeight: 700, 
+                    textTransform: 'uppercase', 
+                    letterSpacing: '1px', 
+                    color: '#94a3b8' 
+                  }}
+                >
+                  {item.section}
+                </div>
+              );
+            } else if ('path' in item) {
+              if ('module' in item && item.module) {
+                if (!hasPermission(item.module as any)) return;
+              }
+
+              if (currentSection) {
+                elements.push(currentSection);
+                currentSection = null;
+              }
+
+              const Icon = item.icon as React.ElementType;
+              const isActive = item.path === '/'
+                ? location.pathname === '/'
+                : location.pathname.startsWith(item.path as string);
+
+              if ('external' in item && item.external) {
+                elements.push(
+                  <a
+                    key={`nav-${index}`}
+                    href={item.path as string}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="sidebar-link"
+                  >
+                    <Icon />
+                    <span>{item.label}</span>
+                  </a>
+                );
+              } else {
+                elements.push(
+                  <NavLink
+                    key={`nav-${index}`}
+                    to={item.path as string}
+                    className={`sidebar-link ${isActive ? 'active' : ''}`}
+                  >
+                    <Icon />
+                    <span>{item.label}</span>
+                    {'badge' in item && item.badge && (
+                      <span className="sidebar-badge">3</span>
+                    )}
+                  </NavLink>
+                );
+              }
             }
+          });
 
-            const Icon = item.icon!;
-            const isActive = item.path === '/'
-              ? location.pathname === '/'
-              : location.pathname.startsWith(item.path!);
-
-            return (
-              <NavLink
-                key={item.path}
-                to={item.path!}
-                className={`sidebar-link ${isActive ? 'active' : ''}`}
-              >
-                <Icon />
-                <span>{item.label}</span>
-                {'badge' in item && item.badge && (
-                  <span className="sidebar-badge">3</span>
-                )}
-              </NavLink>
-            );
-          }
-
-          return null;
-        })}
+          return elements;
+        })()}
       </nav>
 
       <div className="sidebar-user">

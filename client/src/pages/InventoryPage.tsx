@@ -194,7 +194,11 @@ export default function InventoryPage() {
                     <tr key={p.id}>
                       <td>
                         <Link to={`/inventory/${p.id}`} className="flex items-center gap-sm" style={{ color: 'inherit' }}>
-                          <span style={{ fontSize: 22 }}>{p.image || '📦'}</span>
+                          {p.image && p.image.startsWith('http') ? (
+                            <img src={p.image} alt={p.name} style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} />
+                          ) : (
+                            <span style={{ fontSize: 22 }}>📦</span>
+                          )}
                           <div>
                             <div style={{ fontWeight: 600 }}>{p.name}</div>
                             {p.isCombo && <span className="badge badge-info" style={{ marginTop: 2 }}>Combo</span>}

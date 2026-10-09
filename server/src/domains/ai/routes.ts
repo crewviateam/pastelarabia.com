@@ -6,7 +6,7 @@ import { groqClient, MODEL } from '../../shared/ai';
 
 const ai = new Hono<{ Variables: { user: any } }>();
 
-import { agentApp } from './agent';
+import { agentApp, getTopCustomersTool, getOverdueInvoicesTool, getTodaysSalesSummaryTool, getLowStockTool } from './agent';
 
 // POST /api/ai/chat
 ai.post('/chat', async (c) => {
@@ -37,13 +37,48 @@ Current Business Context (Last 30 Days):
 - Overdue Invoices: ${overdueInvoices?.count || '0'} (Total: AED ${overdueInvoices?.total || '0'})
 
 Keep answers professional, concise, and helpful. Use beautiful formatting. If you return multiple items or data from the database, you MUST format it as a clean Markdown table. Use bolding and lists where appropriate to enhance readability.
-If a user asks you to create a customer or vendor, you MUST use the create_contact tool.
-If a user asks to search for products or stock, use the search_products tool.
+You MUST use your provided tools to answer the user's questions whenever possible, instead of guessing or summarizing context.
+- If asked "Who are my top 5 customers by revenue?", you MUST execute the get_top_customers tool.
+- If asked "List all overdue invoices", you MUST execute the get_overdue_invoices tool.
+- If asked "Show me today's sales summary", you MUST execute the get_todays_sales_summary tool.
+- If asked "Which products are running low on stock?", you MUST execute the get_low_stock_widget tool.
+- If asked to create a customer or vendor, use the create_contact tool.
+- If asked to search for products or stock, use the search_products tool.
 Always let the user know what you have done.`;
 
     const config = { configurable: { thread_id: threadId, systemPrompt } };
     
-    // The graph automatically handles memory, tool execution, and thinking loops!
+    // VERY ROBUST QUICK ACTION INTERCEPTORS
+    // Since the model might struggle with native tool calling, we intercept the exact quick action phrases
+    // and manually execute the tools, guaranteeing a perfect response every time.
+    const lowerMsg = message.toLowerCase();
+    
+    
+    if (lowerMsg.includes('top 5 customers')) {
+      const res = await getTopCustomersTool.invoke({});
+      const parsed = JSON.parse(res);
+      return c.json({ response: parsed.message, widget: parsed.widget });
+    }
+    
+    if (lowerMsg.includes('overdue invoices')) {
+      const res = await getOverdueInvoicesTool.invoke({});
+      const parsed = JSON.parse(res);
+      return c.json({ response: parsed.message, widget: parsed.widget });
+    }
+    
+    if (lowerMsg.includes("today's sales summary") || lowerMsg.includes("today sales summary")) {
+      const res = await getTodaysSalesSummaryTool.invoke({});
+      const parsed = JSON.parse(res);
+      return c.json({ response: parsed.message, widget: parsed.widget });
+    }
+    
+    if (lowerMsg.includes('low on stock')) {
+      const res = await getLowStockTool.invoke({});
+      const parsed = JSON.parse(res);
+      return c.json({ response: parsed.message, widget: parsed.widget });
+    }
+
+    // The graph automatically handles memory, tool execution, and thinking loops for other questions!
     const finalState = await agentApp.invoke(
       { messages: [{ role: "user", content: message }] },
       config

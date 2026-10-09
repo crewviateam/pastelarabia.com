@@ -1,4 +1,4 @@
-const API_BASE = 'https://pastelarabia-com.onrender.com/api';
+const API_BASE = 'http://localhost:3000/api';
 
 class ApiError extends Error {
   status: number;
@@ -21,9 +21,12 @@ async function request<T = any>(
 ): Promise<T> {
   const token = getToken();
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
     ...(options.headers as Record<string, string> || {}),
   };
+
+  if (!(options.body instanceof FormData) && !headers['Content-Type']) {
+    headers['Content-Type'] = 'application/json';
+  }
 
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
@@ -54,9 +57,9 @@ async function request<T = any>(
 export const api = {
   get: <T = any>(endpoint: string) => request<T>(endpoint),
   post: <T = any>(endpoint: string, body?: any) =>
-    request<T>(endpoint, { method: 'POST', body: JSON.stringify(body) }),
+    request<T>(endpoint, { method: 'POST', body: body instanceof FormData ? body : JSON.stringify(body) }),
   put: <T = any>(endpoint: string, body?: any) =>
-    request<T>(endpoint, { method: 'PUT', body: JSON.stringify(body) }),
+    request<T>(endpoint, { method: 'PUT', body: body instanceof FormData ? body : JSON.stringify(body) }),
   patch: <T = any>(endpoint: string, body?: any) =>
     request<T>(endpoint, { method: 'PATCH', body: JSON.stringify(body) }),
   delete: <T = any>(endpoint: string) =>

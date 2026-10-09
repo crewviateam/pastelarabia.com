@@ -223,4 +223,53 @@ invoicing.post('/:id/send-whatsapp', async (c) => {
   }
 });
 
+// GET /api/invoices/:id/pdf
+invoicing.get('/:id/pdf', async (c) => {
+  const id = c.req.param('id');
+  
+  const [fullInvoice] = await db.select({
+    id: s.invoices.id,
+    invoiceNumber: s.invoices.invoiceNumber,
+    customerName: s.customers.name,
+    customerPhone: s.customers.phone,
+    customerAddress: s.customers.address,
+    customerTrn: s.customers.trn,
+    subtotal: s.invoices.subtotal,
+    vatAmount: s.invoices.vatAmount,
+    discountAmount: s.invoices.discountAmount,
+    totalAmount: s.invoices.totalAmount,
+    status: s.invoices.status,
+    createdAt: s.invoices.createdAt,
+  }).from(s.invoices)
+    .innerJoin(s.customers, eq(s.invoices.customerId, s.customers.id))
+    .where(eq(s.invoices.id, id))
+    .limit(1);
+
+  if (!fullInvoice) return c.json({ error: 'Invoice not found' }, 404);
+
+  const items = await db.select({
+    productName: s.products.name,
+    productSku: s.products.sku,
+    variantSku: s.productVariants.sku,
+    shadeName: s.shades.name,
+    quantity: s.invoiceItems.quantity,
+    unitPrice: s.invoiceItems.unitPrice,
+    totalPrice: s.invoiceItems.totalPrice,
+  }).from(s.invoiceItems)
+    .innerJoin(s.products, eq(s.invoiceItems.productId, s.products.id))
+    .leftJoin(s.productVariants, eq(s.invoiceItems.variantId, s.productVariants.id))
+    .leftJoin(s.shades, eq(s.productVariants.shadeId, s.shades.id))
+    .where(eq(s.invoiceItems.invoiceId, id));
+
+  const [settings] = await db.select().from(s.businessSettings).limit(1);
+
+  const invoiceDataForPdf = { ...fullInvoice, items, businessSettings: settings };
+  const pdfBuffer = await generateInvoicePdfBuffer(invoiceDataForPdf);
+
+  return c.body(pdfBuffer, 200, {
+    'Content-Type': 'application/pdf',
+    'Content-Disposition': `attachment; filename="Invoice_${fullInvoice.invoiceNumber}.pdf"`,
+  });
+});
+
 export default invoicing;

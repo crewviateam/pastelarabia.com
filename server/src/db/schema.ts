@@ -40,6 +40,16 @@ export const branches = pgTable('branches', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
+// ===================== SETTINGS & INTEGRATIONS =====================
+export const companySettings = pgTable('company_settings', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  companyName: text('company_name').notNull().default('Glow Wholesale'),
+  tallyEnabled: boolean('tally_enabled').notNull().default(false),
+  tallyServerUrl: text('tally_server_url').default('http://localhost:9000'),
+  tallyCompanyName: text('tally_company_name'),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
 // ===================== AUTH =====================
 export const users = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey(),

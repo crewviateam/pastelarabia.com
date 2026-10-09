@@ -18,7 +18,7 @@ export default function AddProductPage() {
     name: '', sku: '', description: '', barcode: '',
     categoryId: '', brandId: '',
     costPrice: '', wholesalePrice: '', retailPrice: '',
-    reorderLevel: '10', image: '📦', isCombo: false,
+    reorderLevel: '10', image: '', isCombo: false,
     variants: [] as any[],
   });
 
@@ -133,9 +133,32 @@ export default function AddProductPage() {
               <label className="form-label">SKU <span className="required">*</span></label>
               <input className="form-input" value={form.sku} onChange={e => setForm({ ...form, sku: e.target.value })} required />
             </div>
-            <div className="form-group" style={{ maxWidth: 100 }}>
-              <label className="form-label">Emoji Icon</label>
-              <input className="form-input" value={form.image} onChange={e => setForm({ ...form, image: e.target.value })} style={{ fontSize: 20, textAlign: 'center' }} />
+            <div className="form-group" style={{ flex: 1 }}>
+              <label className="form-label">Product Image</label>
+              <div className="flex items-center gap-sm">
+                {form.image && form.image.startsWith('http') && (
+                  <img src={form.image} alt="preview" style={{ width: 38, height: 38, objectFit: 'cover', borderRadius: '4px' }} />
+                )}
+                <input 
+                  type="file" 
+                  accept="image/*"
+                  className="form-input" 
+                  onChange={async e => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    try {
+                      const formData = new FormData();
+                      formData.append('file', file);
+                      // Use the new API post method which handles FormData correctly
+                      const res = await api.post('/inventory/upload', formData);
+                      setForm(prev => ({ ...prev, image: res.url }));
+                      success('Image uploaded successfully');
+                    } catch (err: any) {
+                      showError('Failed to upload image', err.message);
+                    }
+                  }} 
+                />
+              </div>
             </div>
           </div>
 

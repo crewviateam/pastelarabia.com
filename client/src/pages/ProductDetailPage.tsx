@@ -72,7 +72,15 @@ export default function ProductDetailPage() {
             <ArrowLeft size={20} />
           </button>
           <div className="flex items-center gap-md">
-            <span style={{ fontSize: 32 }}>{product.image || '📦'}</span>
+            {product.image && product.image.startsWith('http') ? (
+              <img 
+                src={product.image} 
+                alt={product.name} 
+                style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }} 
+              />
+            ) : (
+              <span style={{ fontSize: 32 }}>{product.image || '📦'}</span>
+            )}
             <div>
               <h1 style={{ marginBottom: 4 }}>{product.name}</h1>
               <div className="flex items-center gap-sm">

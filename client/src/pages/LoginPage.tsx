@@ -40,47 +40,48 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{
+    <div className="login-container" style={{
       minHeight: '100vh',
       display: 'flex',
-      background: 'linear-gradient(135deg, #FAF6F3 0%, #F0E8E2 50%, #E8DDD5 100%)',
+      background: '#ffffff',
     }}>
-      {/* Left — Branding */}
-      <div style={{
+      {/* Left — Beautiful Cosmetics Imagery */}
+      <div className="login-left" style={{
         flex: 1,
+        position: 'relative',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '48px',
-        background: 'linear-gradient(135deg, #1E1B18 0%, #2A2622 100%)',
-        color: 'white',
+        justifyContent: 'flex-end',
+        padding: '60px',
+        background: 'url("https://images.unsplash.com/photo-1596462502278-27bfdc403348?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80") center/cover no-repeat',
       }}>
-        <div style={{ maxWidth: 420, textAlign: 'center' }}>
-          <div style={{
-            width: 72, height: 72,
-            background: 'linear-gradient(135deg, #C8956C, #C17B7B)',
-            borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 32, margin: '0 auto 24px',
-          }}>✦</div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', fontWeight: 700, marginBottom: 8 }}>
-            Glow Wholesale
+        {/* Dark gradient overlay for text readability */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%)',
+        }}></div>
+
+        <div style={{ position: 'relative', zIndex: 1, color: '#ffffff', maxWidth: '500px' }}>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '3rem', fontWeight: 300, marginBottom: '16px', letterSpacing: '-0.5px' }}>
+            Beauty,<br/><span style={{ fontWeight: 600 }}>Redefined.</span>
           </h1>
-          <p style={{ fontSize: 'var(--text-lg)', color: 'rgba(255,255,255,0.6)', marginBottom: 40 }}>
-            Premium Cosmetics Business Management
+          <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.9)', marginBottom: '40px', lineHeight: 1.6 }}>
+            Manage your entire cosmetic inventory, process wholesale orders, and connect with distributors instantly through the Pastel Arabia business portal.
           </p>
+          
           <div style={{
-            display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
-            textAlign: 'center', opacity: 0.7,
+            display: 'flex', gap: '32px',
+            textAlign: 'left', opacity: 0.9,
           }}>
             {[
-              { num: '5,000+', label: 'SKUs Managed' },
-              { num: '500+', label: 'Distributors' },
-              { num: '₹50M+', label: 'Revenue Tracked' },
+              { num: '5K+', label: 'Premium SKUs' },
+              { num: '500+', label: 'Active Retailers' },
+              { num: '24/7', label: 'B2B Support' },
             ].map((s, i) => (
               <div key={i}>
-                <div style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: '#C8956C' }}>{s.num}</div>
-                <div style={{ fontSize: 'var(--text-xs)', marginTop: 4 }}>{s.label}</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#ffffff' }}>{s.num}</div>
+                <div style={{ fontSize: '0.85rem', marginTop: '4px', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '1px' }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -88,45 +89,57 @@ export default function LoginPage() {
       </div>
 
       {/* Right — Login Form */}
-      <div style={{
-        width: 520,
+      <div className="login-right" style={{
+        width: '480px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        padding: '48px 56px',
+        padding: '48px 64px',
+        background: '#ffffff',
+        boxShadow: '-10px 0 30px rgba(0,0,0,0.03)',
+        zIndex: 10,
       }}>
-        <h2 style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, marginBottom: 4 }}>
-          Welcome back
-        </h2>
-        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', marginBottom: 32 }}>
-          Sign in to your business portal
-        </p>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <img 
+            src="https://pastelcosmeticsuk.com/cdn/shop/files/pastel-cosmetics-uk-logo-dark_5f8eb610-3cb9-49d3-9c5f-dc4d303eecc2_1200x1200.png?v=1629311553" 
+            alt="Pastel Logo" 
+            style={{ width: '180px', height: 'auto', display: 'block', margin: '0 auto 24px' }} 
+          />
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 600, color: '#1a1a1a', marginBottom: '8px' }}>
+            Welcome Back
+          </h2>
+          <p style={{ fontSize: '0.95rem', color: '#666666' }}>
+            Sign in to the Pastel Business Portal
+          </p>
+        </div>
 
         {error && (
           <div style={{
-            background: 'var(--color-error-light)', color: 'var(--color-error-dark)',
-            padding: '10px 14px', borderRadius: 'var(--radius-md)',
-            fontSize: 'var(--text-sm)', marginBottom: 16,
+            background: '#fee2e2', color: '#991b1b',
+            padding: '12px 16px', borderRadius: '8px',
+            fontSize: '0.9rem', marginBottom: '24px',
+            borderLeft: '4px solid #ef4444'
           }}>
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group" style={{ marginBottom: 16 }}>
-            <label className="form-label">Email</label>
+          <div className="form-group" style={{ marginBottom: '20px' }}>
+            <label className="form-label" style={{ fontWeight: 500, color: '#333' }}>Email Address</label>
             <input
               type="email"
               className="form-input"
-              placeholder="owner@glow.ae"
+              placeholder="admin@pastelarabia.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              style={{ padding: '12px 16px', backgroundColor: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '8px' }}
             />
           </div>
 
-          <div className="form-group" style={{ marginBottom: 24 }}>
-            <label className="form-label">Password</label>
+          <div className="form-group" style={{ marginBottom: '32px' }}>
+            <label className="form-label" style={{ fontWeight: 500, color: '#333' }}>Password</label>
             <div style={{ position: 'relative' }}>
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -135,55 +148,67 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                style={{ paddingRight: 40 }}
+                style={{ padding: '12px 40px 12px 16px', backgroundColor: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '8px' }}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 style={{
-                  position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)',
+                  position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
                   background: 'none', border: 'none', cursor: 'pointer',
-                  color: 'var(--color-text-muted)', padding: 4,
+                  color: '#9ca3af', padding: '4px',
                 }}
               >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%' }} disabled={loading}>
-            {loading ? <span className="loading-spinner" /> : 'Sign In'}
+          <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%', padding: '14px', borderRadius: '8px', fontSize: '1rem', fontWeight: 600, backgroundColor: '#000000', color: '#ffffff', border: 'none' }} disabled={loading}>
+            {loading ? <span className="loading-spinner" style={{ borderColor: '#ffffff', borderRightColor: 'transparent' }} /> : 'Sign In'}
           </button>
         </form>
 
         <div style={{
-          margin: '32px 0 16px',
+          margin: '40px 0 24px',
+          display: 'flex',
+          alignItems: 'center',
           textAlign: 'center',
-          color: 'var(--color-text-muted)',
-          fontSize: 'var(--text-xs)',
+          color: '#9ca3af',
+          fontSize: '0.75rem',
           textTransform: 'uppercase',
-          letterSpacing: 1,
+          letterSpacing: '1px',
         }}>
-          Quick Demo Access
+          <div style={{ flex: 1, height: '1px', background: '#e5e7eb' }}></div>
+          <span style={{ padding: '0 12px' }}>Quick Demo Access</span>
+          <div style={{ flex: 1, height: '1px', background: '#e5e7eb' }}></div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
           {[
-            { role: 'owner', label: 'Owner', color: '#8B6F5C' },
-            { role: 'manager', label: 'Manager', color: '#C8956C' },
-            { role: 'accountant', label: 'Accountant', color: '#4CAF50' },
-            { role: 'sales_executive', label: 'Sales Exec', color: '#3B82F6' },
+            { role: 'owner', label: 'Owner', color: '#000000' },
+            { role: 'manager', label: 'Manager', color: '#4b5563' },
+            { role: 'accountant', label: 'Accountant', color: '#10b981' },
+            { role: 'sales_executive', label: 'Sales Exec', color: '#3b82f6' },
           ].map(r => (
             <button
               key={r.role}
               className="btn btn-secondary btn-sm"
               onClick={() => handleDemoLogin(r.role)}
               disabled={loading}
-              style={{ justifyContent: 'flex-start' }}
+              style={{ 
+                justifyContent: 'center', 
+                backgroundColor: '#ffffff', 
+                border: '1px solid #e5e7eb',
+                borderRadius: '6px',
+                padding: '8px',
+                color: '#4b5563',
+                fontWeight: 500
+              }}
             >
               <span style={{
-                width: 8, height: 8, borderRadius: '50%',
-                background: r.color, flexShrink: 0,
+                width: '6px', height: '6px', borderRadius: '50%',
+                background: r.color, marginRight: '8px', display: 'inline-block'
               }} />
               {r.label}
             </button>

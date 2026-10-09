@@ -144,6 +144,8 @@ sales.put('/orders/:id/status', async (c) => {
   return c.json(updated);
 });
 
+import { syncInvoiceToTally } from '../integrations/tally';
+
 // POST /api/sales/orders/:id/convert-invoice
 sales.post('/orders/:id/convert-invoice', async (c) => {
   const id = c.req.param('id');
@@ -215,6 +217,9 @@ sales.post('/orders/:id/convert-invoice', async (c) => {
 
   // Note: we don't increase outstanding_balance because it's instantly offset by the payment.
   // Instead, if it were unpaid, we would increase it. Since we auto-pay, net change is 0.
+
+  // Trigger Tally sync asynchronously
+  syncInvoiceToTally(invoice.id).catch(err => console.error(err));
 
   return c.json({ invoice, message: 'Converted and paid successfully' });
 });

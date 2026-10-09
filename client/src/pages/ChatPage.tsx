@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
-import { Search, Send, Plus, MoreVertical, MessageSquare } from 'lucide-react';
+import { Search, Send, Plus, MoreVertical, MessageSquare, ArrowLeft } from 'lucide-react';
 
 export default function ChatPage() {
   const { user } = useAuth();
@@ -176,10 +176,10 @@ export default function ChatPage() {
   );
 
   return (
-    <div style={{ display: 'flex', height: 'calc(100vh - var(--header-height) - 48px)', gap: 16 }}>
+    <div className="chat-layout" style={{ display: 'flex', height: 'calc(100vh - var(--header-height) - 48px)', gap: 16 }}>
       
       {/* Sidebar: Conversation List */}
-      <div className="card" style={{ width: 340, display: 'flex', flexDirection: 'column' }}>
+      <div className={`card chat-sidebar ${activeConvId ? 'hidden-on-mobile' : ''}`} style={{ width: 340, display: 'flex', flexDirection: 'column' }}>
         <div style={{ padding: 16, borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h2 style={{ fontSize: 'var(--text-lg)' }}>Messages</h2>
           <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setShowNewChat(true)}>
@@ -267,7 +267,7 @@ export default function ChatPage() {
         </div>
       </div>
 
-      <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div className={`card chat-main ${!activeConvId ? 'hidden-on-mobile' : ''}`} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {activeConvId ? (
           (() => {
             const activeConv = conversations.find(c => c.id === activeConvId);
@@ -278,6 +278,9 @@ export default function ChatPage() {
               <>
                 <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <button className="btn btn-ghost btn-icon mobile-only" onClick={() => setActiveConvId(null)}>
+                      <ArrowLeft size={20} />
+                    </button>
                     <div style={{ fontWeight: 600, fontSize: 'var(--text-lg)' }}>
                       {getChatName(activeConv)}
                     </div>

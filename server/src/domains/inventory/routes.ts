@@ -544,4 +544,17 @@ inventory.get('/stock/audit', async (c) => {
   return c.json(auditData);
 });
 
+// POST /api/inventory/upload - upload product image
+inventory.post('/upload', async (c) => {
+  const body = await c.req.parseBody();
+  const file = body['file'] as File;
+  if (!file) return c.json({ error: 'No file provided' }, 400);
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const key = await uploadFile(buffer, file.name, file.type, 'products');
+  const url = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+
+  return c.json({ url });
+});
+
 export default inventory;

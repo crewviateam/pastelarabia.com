@@ -263,7 +263,11 @@ export default function CreatePurchasePage() {
                           onMouseOver={e => (e.currentTarget.style.background = 'var(--color-bg-hover)')}
                           onMouseOut={e => (e.currentTarget.style.background = 'transparent')}>
                           <div className="flex items-center gap-sm">
-                            <span style={{ fontSize: 20 }}>{p.image || '📦'}</span>
+                            {p.image && p.image.startsWith('http') ? (
+                              <img src={p.image} alt={p.name} style={{ width: 32, height: 32, objectFit: 'cover', borderRadius: 'var(--radius-sm)' }} />
+                            ) : (
+                              <span style={{ fontSize: 20 }}>{p.image || '📦'}</span>
+                            )}
                             <div style={{ flex: 1 }}>
                               <div style={{ fontWeight: 500 }}>{p.name}</div>
                               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>

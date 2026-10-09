@@ -21,106 +21,237 @@ export const generateInvoicePdfBuffer = async (invoiceData: any): Promise<Buffer
     <head>
       <meta charset="UTF-8">
       <title>Tax Invoice - ${invoiceData.invoiceNumber}</title>
+      <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
       <style>
-        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 40px; color: #333; line-height: 1.6; }
-        .header { display: flex; justify-content: space-between; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
-        .logo { max-width: 150px; font-size: 24px; font-weight: bold; color: #1a1a1a; }
-        .invoice-title { font-size: 28px; font-weight: bold; color: #333; text-align: right; text-transform: uppercase; letter-spacing: 2px; }
-        .details-grid { display: flex; justify-content: space-between; margin-bottom: 40px; }
-        .section-title { font-size: 12px; font-weight: bold; color: #777; text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px; }
-        .info-block p { margin: 2px 0; font-size: 14px; }
-        .table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 14px; }
-        .table th { background: #f8f9fa; padding: 12px; text-align: left; font-weight: bold; border-bottom: 2px solid #ddd; }
-        .table td { padding: 12px; border-bottom: 1px solid #eee; }
+        :root {
+          --primary: #000000;
+          --secondary: #666666;
+          --border: #eeeeee;
+          --bg-light: #fafafa;
+        }
+        body { 
+          font-family: 'Outfit', sans-serif; 
+          padding: 50px; 
+          color: var(--primary); 
+          line-height: 1.5; 
+          background: #ffffff;
+        }
+        .header { 
+          display: flex; 
+          justify-content: space-between; 
+          align-items: center;
+          margin-bottom: 50px; 
+        }
+        .logo img { 
+          max-width: 180px; 
+          height: auto;
+        }
+        .invoice-badge {
+          background: var(--primary);
+          color: #ffffff;
+          padding: 8px 16px;
+          font-size: 14px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          border-radius: 4px;
+          font-weight: 500;
+        }
+        .greeting {
+          font-size: 24px;
+          font-weight: 300;
+          margin-bottom: 40px;
+          letter-spacing: -0.5px;
+        }
+        .greeting strong {
+          font-weight: 600;
+        }
+        .details-grid { 
+          display: flex; 
+          justify-content: space-between; 
+          margin-bottom: 40px; 
+          background: var(--bg-light);
+          padding: 30px;
+          border-radius: 12px;
+        }
+        .section-title { 
+          font-size: 11px; 
+          font-weight: 600; 
+          color: var(--secondary); 
+          text-transform: uppercase; 
+          letter-spacing: 1.5px;
+          margin-bottom: 12px; 
+        }
+        .info-block p { 
+          margin: 4px 0; 
+          font-size: 14px; 
+          font-weight: 400;
+        }
+        .info-block p strong {
+          font-weight: 500;
+        }
+        .table { 
+          width: 100%; 
+          border-collapse: collapse; 
+          margin-bottom: 40px; 
+          font-size: 14px; 
+        }
+        .table th { 
+          padding: 16px 12px; 
+          text-align: left; 
+          font-weight: 600; 
+          border-bottom: 2px solid var(--primary); 
+          font-size: 12px;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+        .table td { 
+          padding: 16px 12px; 
+          border-bottom: 1px solid var(--border); 
+          vertical-align: middle;
+        }
+        .item-name {
+          font-weight: 500;
+          font-size: 15px;
+          margin-bottom: 4px;
+        }
+        .item-meta {
+          font-size: 12px;
+          color: var(--secondary);
+        }
         .table th.right, .table td.right { text-align: right; }
-        .totals { width: 40%; margin-left: auto; font-size: 14px; }
-        .totals-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
-        .totals-row.grand { font-size: 18px; font-weight: bold; color: #000; border-bottom: none; border-top: 2px solid #333; margin-top: 10px; padding-top: 10px; }
-        .footer { text-align: center; margin-top: 50px; font-size: 12px; color: #777; border-top: 1px solid #eee; padding-top: 20px; }
+        .table th.center, .table td.center { text-align: center; }
+        
+        .totals-container {
+          display: flex;
+          justify-content: flex-end;
+          margin-bottom: 50px;
+        }
+        .totals { 
+          width: 350px; 
+          font-size: 14px; 
+          background: var(--bg-light);
+          padding: 24px;
+          border-radius: 12px;
+        }
+        .totals-row { 
+          display: flex; 
+          justify-content: space-between; 
+          padding: 10px 0; 
+          color: var(--secondary);
+        }
+        .totals-row.grand { 
+          font-size: 20px; 
+          font-weight: 600; 
+          color: var(--primary); 
+          border-top: 1px solid var(--border); 
+          margin-top: 12px; 
+          padding-top: 16px; 
+        }
+        .footer { 
+          text-align: center; 
+          font-size: 12px; 
+          color: var(--secondary); 
+          padding-top: 30px; 
+          border-top: 1px solid var(--border);
+        }
+        .footer-heart {
+          color: #ff4b4b;
+        }
       </style>
     </head>
     <body>
       <div class="header">
         <div class="logo">
-          ${invoiceData.businessSettings?.companyName || 'Glow Wholesale'}
+          <img src="https://pastelcosmeticsuk.com/cdn/shop/files/pastel-cosmetics-uk-logo-dark_5f8eb610-3cb9-49d3-9c5f-dc4d303eecc2_1200x1200.png?v=1629311553" alt="Pastel Cosmetics" />
         </div>
         <div>
-          <div class="invoice-title">TAX INVOICE</div>
-          <div style="text-align: right; font-size: 14px; margin-top: 8px;">
-            <p style="margin:2px 0"><strong>Invoice No:</strong> ${invoiceData.invoiceNumber}</p>
-            <p style="margin:2px 0"><strong>Date:</strong> ${new Date(invoiceData.createdAt).toLocaleDateString()}</p>
-          </div>
+          <div class="invoice-badge">TAX INVOICE</div>
         </div>
       </div>
 
+      <div class="greeting">
+        Hello <strong>${invoiceData.customerName.split(' ')[0]}</strong>, <br/>
+        <span style="font-size: 18px; color: var(--secondary);">Thank you for shopping with Pastel Arabia! Here are the details of your recent order.</span>
+      </div>
+
       <div class="details-grid">
-        <div class="info-block" style="width: 45%;">
-          <div class="section-title">Supplier Details</div>
-          <p><strong>${invoiceData.businessSettings?.companyName || 'Glow Wholesale LLC'}</strong></p>
-          <p>${invoiceData.businessSettings?.address || 'Dubai, UAE'}</p>
-          <p>TRN: <strong>${invoiceData.businessSettings?.trn || '100000000000003'}</strong></p>
-          <p>Phone: ${invoiceData.businessSettings?.phone || '+971 4 123 4567'}</p>
+        <div class="info-block" style="width: 30%;">
+          <div class="section-title">Invoice Details</div>
+          <p><strong>Invoice No:</strong> ${invoiceData.invoiceNumber}</p>
+          <p><strong>Date:</strong> ${new Date(invoiceData.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          <p><strong>Status:</strong> <span style="color: #10b981; font-weight: 600; text-transform: capitalize;">${invoiceData.status}</span></p>
         </div>
-        
-        <div class="info-block" style="width: 45%;">
-          <div class="section-title">Customer Details</div>
+
+        <div class="info-block" style="width: 30%;">
+          <div class="section-title">Billed To</div>
           <p><strong>${invoiceData.customerName}</strong></p>
           ${invoiceData.customerAddress ? `<p>${invoiceData.customerAddress}</p>` : ''}
-          ${invoiceData.customerTrn ? `<p>TRN: <strong>${invoiceData.customerTrn}</strong></p>` : ''}
-          ${invoiceData.customerPhone ? `<p>Phone: ${invoiceData.customerPhone}</p>` : ''}
+          ${invoiceData.customerPhone ? `<p>${invoiceData.customerPhone}</p>` : ''}
+          ${invoiceData.customerTrn ? `<p>TRN: ${invoiceData.customerTrn}</p>` : ''}
+        </div>
+
+        <div class="info-block" style="width: 30%;">
+          <div class="section-title">Sold By</div>
+          <p><strong>${invoiceData.businessSettings?.companyName || 'Pastel Cosmetics Arabia'}</strong></p>
+          <p>${invoiceData.businessSettings?.address || 'Dubai, United Arab Emirates'}</p>
+          <p>TRN: <strong>${invoiceData.businessSettings?.trn || '100000000000003'}</strong></p>
+          <p>${invoiceData.businessSettings?.phone || '+971 4 123 4567'}</p>
         </div>
       </div>
 
       <table class="table">
         <thead>
           <tr>
-            <th>Description</th>
-            <th class="right">Qty</th>
+            <th>Item Description</th>
+            <th class="center">Qty</th>
             <th class="right">Unit Price</th>
             <th class="right">VAT (5%)</th>
-            <th class="right">Amount (AED)</th>
+            <th class="right">Total (AED)</th>
           </tr>
         </thead>
         <tbody>
           ${invoiceData.items.map((item: any) => `
             <tr>
               <td>
-                <div style="font-weight: 500">${item.productName}</div>
-                <div style="font-size: 12px; color: #666;">SKU: ${item.variantSku || item.productSku} ${item.shadeName ? `- ${item.shadeName}` : ''}</div>
+                <div class="item-name">${item.productName}</div>
+                <div class="item-meta">SKU: ${item.variantSku || item.productSku} ${item.shadeName ? `| Shade: ${item.shadeName}` : ''}</div>
               </td>
-              <td class="right">${item.quantity}</td>
+              <td class="center" style="font-weight: 500;">${item.quantity}</td>
               <td class="right">${parseFloat(item.unitPrice).toFixed(2)}</td>
               <td class="right">${(parseFloat(item.totalPrice) * 0.05).toFixed(2)}</td>
-              <td class="right">${parseFloat(item.totalPrice).toFixed(2)}</td>
+              <td class="right" style="font-weight: 500;">${parseFloat(item.totalPrice).toFixed(2)}</td>
             </tr>
           `).join('')}
         </tbody>
       </table>
 
-      <div class="totals">
-        <div class="totals-row">
-          <span>Subtotal (Excl. VAT)</span>
-          <span>AED ${parseFloat(invoiceData.subtotal).toFixed(2)}</span>
-        </div>
-        ${parseFloat(invoiceData.discountAmount) > 0 ? `
-        <div class="totals-row" style="color: #d32f2f;">
-          <span>Discount</span>
-          <span>- AED ${parseFloat(invoiceData.discountAmount).toFixed(2)}</span>
-        </div>
-        ` : ''}
-        <div class="totals-row">
-          <span>Total VAT (5%)</span>
-          <span>AED ${parseFloat(invoiceData.vatAmount).toFixed(2)}</span>
-        </div>
-        <div class="totals-row grand">
-          <span>Total Amount</span>
-          <span>AED ${parseFloat(invoiceData.totalAmount).toFixed(2)}</span>
+      <div class="totals-container">
+        <div class="totals">
+          <div class="totals-row">
+            <span>Subtotal</span>
+            <span style="color: var(--primary);">AED ${parseFloat(invoiceData.subtotal).toFixed(2)}</span>
+          </div>
+          ${parseFloat(invoiceData.discountAmount) > 0 ? `
+          <div class="totals-row" style="color: #ef4444;">
+            <span>Discount Applied</span>
+            <span>- AED ${parseFloat(invoiceData.discountAmount).toFixed(2)}</span>
+          </div>
+          ` : ''}
+          <div class="totals-row">
+            <span>Estimated VAT (5%)</span>
+            <span style="color: var(--primary);">AED ${parseFloat(invoiceData.vatAmount).toFixed(2)}</span>
+          </div>
+          <div class="totals-row grand">
+            <span>Total Amount</span>
+            <span>AED ${parseFloat(invoiceData.totalAmount).toFixed(2)}</span>
+          </div>
         </div>
       </div>
 
       <div class="footer">
-        <p>This is a computer-generated document. No signature is required.</p>
-        <p>Thank you for your business!</p>
+        <p style="font-size: 14px; font-weight: 500; color: var(--primary); margin-bottom: 8px;">Enjoy your new Pastel products! <span class="footer-heart">♥</span></p>
+        <p>This is a computer-generated tax invoice. No physical signature is required.</p>
+        <p style="margin-top: 4px;">pastelarabia.com | @pastelarabia</p>
       </div>
     </body>
     </html>

@@ -1,5 +1,5 @@
 import { useAuth } from '../../contexts/AuthContext';
-import { Bell, Search, ChevronDown } from 'lucide-react';
+import { Bell, Search, ChevronDown, Menu } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import api from '../../lib/api';
 
@@ -8,7 +8,7 @@ interface BranchOption {
   name: string;
 }
 
-export default function Header() {
+export default function Header({ onMenuClick }: { onMenuClick?: () => void }) {
   const { user } = useAuth();
   const [branches, setBranches] = useState<BranchOption[]>([]);
   const [selectedBranch, setSelectedBranch] = useState<string>('all');
@@ -25,7 +25,14 @@ export default function Header() {
   return (
     <header className="app-header">
       <div className="flex items-center gap-md">
-        <div className="search-input-wrapper" style={{ width: 320 }}>
+        <button 
+          className="btn btn-ghost btn-icon mobile-only" 
+          onClick={onMenuClick}
+          style={{ display: 'none' }} // we'll override this in CSS
+        >
+          <Menu size={20} />
+        </button>
+        <div className="search-input-wrapper" style={{ width: 320, maxWidth: '100%' }}>
           <Search size={16} />
           <input
             type="text"

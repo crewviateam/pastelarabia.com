@@ -127,7 +127,26 @@ export default function InvoiceDetailPage() {
           <button className="btn btn-secondary">
             <Printer size={16} /> Print
           </button>
-          <button className="btn btn-secondary">
+          <button className="btn btn-secondary" onClick={async () => {
+            try {
+              const res = await fetch(`http://localhost:3000/api/invoices/${id}/pdf`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
+              });
+              if (!res.ok) throw new Error('Failed to download PDF');
+              
+              const blob = await res.blob();
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `Invoice_${invoice.invoiceNumber}.pdf`;
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+              document.body.removeChild(a);
+            } catch (err: any) {
+              showError('Download failed', err.message);
+            }
+          }}>
             <Download size={16} /> PDF
           </button>
           <button className="btn btn-success" onClick={handleSendWhatsApp} disabled={sending}>

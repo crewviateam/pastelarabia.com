@@ -151,7 +151,7 @@ export default function DashboardPage() {
                 <BarChart data={salesChart}>
                   <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#888' }} axisLine={false} tickLine={false} />
                   <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 8px 30px rgba(0,0,0,0.1)', fontWeight: 700 }} />
-                  <Bar dataKey="revenue" fill="#151515" radius={[4,4,4,4]} barSize={24} background={{ fill: '#f5f5f5', radius: 4 }} />
+                  <Bar dataKey="revenue" fill="#151515" radius={[4,4,4,4]} barSize={24} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -377,7 +377,11 @@ export default function DashboardPage() {
                     <tr key={p.productId}>
                       <td>
                         <div className="flex items-center gap-sm">
-                          <span style={{ fontSize: 18 }}>{p.image || '📦'}</span>
+                          {p.image && p.image.startsWith('http') ? (
+                            <img src={p.image} alt={p.productName} style={{ width: '32px', height: '32px', objectFit: 'cover', borderRadius: '4px' }} />
+                          ) : (
+                            <span style={{ fontSize: 18 }}>{p.image || '📦'}</span>
+                          )}
                           <div>
                             <div style={{ fontWeight: 500 }}>{p.productName}</div>
                             <div className="cell-muted">{p.sku}</div>
@@ -421,7 +425,11 @@ export default function DashboardPage() {
                     <tr key={p.productId}>
                       <td>
                         <div className="flex items-center gap-sm">
-                          <span style={{ fontSize: 18 }}>{p.image || '📦'}</span>
+                          {p.image && p.image.startsWith('http') ? (
+                            <img src={p.image} alt={p.productName} style={{ width: '32px', height: '32px', objectFit: 'cover', borderRadius: '4px' }} />
+                          ) : (
+                            <span style={{ fontSize: 18 }}>{p.image || '📦'}</span>
+                          )}
                           <div>
                             <div style={{ fontWeight: 500 }}>{p.productName}</div>
                             <div className="cell-muted">{p.category || '-'}</div>
