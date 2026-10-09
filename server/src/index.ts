@@ -52,7 +52,7 @@ const app = new Hono();
 // Middleware
 app.use('*', logger());
 app.use('*', cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  origin: ['http://localhost:5173', 'https://pastelarabia-com-sigma.vercel.app', 'https://pastelarabia.com'],
   credentials: true,
 }));
 
