@@ -1099,6 +1099,18 @@ button, input, select, textarea {
   
   .newsletter-form { flex-direction: column; width: 100%; }
   .newsletter-input { width: 100% !important; }
+}
+
+/* Base AI Assistant Styles (Desktop) */
+.ai-page-container { height: calc(100vh - var(--header-height) - 48px); }
+.ai-suggestions-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.ai-input-container { padding: var(--space-base) var(--space-xl); }
+
+@media (max-width: 768px) {
+  /* AI Assistant Responsiveness */
+  .ai-page-container { height: calc(100svh - var(--header-height) - 32px) !important; }
+  .ai-suggestions-grid { grid-template-columns: 1fr !important; }
+  .ai-input-container { padding: 12px 16px !important; }
   
   body, html { overflow-x: hidden; width: 100%; }
 }

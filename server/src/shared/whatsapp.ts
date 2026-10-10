@@ -9,6 +9,7 @@ export let whatsappError: string | null = null;
 export const initWhatsApp = () => {
   whatsappClient = new Client({
     authStrategy: new LocalAuth({ dataPath: './.wwebjs_auth' }),
+    webVersionCache: { type: 'remote', remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html' },
     puppeteer: {
       executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || (process.platform === 'win32' ? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe' : undefined),
       args: [

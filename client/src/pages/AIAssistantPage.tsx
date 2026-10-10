@@ -74,7 +74,7 @@ export default function AIAssistantPage() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - var(--header-height) - 48px)' }}>
+    <div className="ai-page-container" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - var(--header-height) - 48px)' }}>
       <div className="page-header" style={{ marginBottom: 'var(--space-base)' }}>
         <div>
           <h1 className="flex items-center gap-sm"><Sparkles size={24} style={{ color: 'var(--color-accent)' }} /> AI Assistant</h1>
@@ -83,7 +83,7 @@ export default function AIAssistantPage() {
       </div>
 
       {/* Chat Messages */}
-      <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <div className="card ai-chat-card" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', height: '100%', minHeight: 0 }}>
         <div style={{ flex: 1, overflowY: 'auto', padding: 'var(--space-xl)' }}>
           {messages.length === 0 ? (
             <div style={{ textAlign: 'center', paddingTop: 60 }}>
@@ -100,7 +100,7 @@ export default function AIAssistantPage() {
               <p style={{ color: 'var(--color-text-muted)', marginBottom: 32, maxWidth: 400, margin: '0 auto 32px' }}>
                 I can analyze your sales data, check inventory levels, summarize outstanding payments, and more.
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8, maxWidth: 500, margin: '0 auto' }}>
+              <div className="ai-suggestions-grid" style={{ gap: 8, maxWidth: 500, margin: '0 auto' }}>
                 {suggestions.map((s, i) => (
                   <button key={i} className="btn btn-secondary" style={{ justifyContent: 'flex-start', textAlign: 'left', padding: '12px 16px' }}
                     onClick={() => sendMessage(s.text)}>
@@ -154,7 +154,7 @@ export default function AIAssistantPage() {
                   
                   {/* GENERATIVE UI WIDGETS */}
                   {msg.widget && msg.widget.type === 'LowStockTable' && (
-                    <div style={{ marginTop: 12, background: 'var(--color-bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border)', overflow: 'hidden', width: '100%', minWidth: 400 }}>
+                    <div style={{ marginTop: 12, background: 'var(--color-bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border)', overflowX: 'auto', width: '100%' }}>
                       <table className="table" style={{ margin: 0 }}>
                         <thead>
                           <tr>
@@ -181,7 +181,7 @@ export default function AIAssistantPage() {
                   )}
 
                   {msg.widget && msg.widget.type === 'SuccessCard' && (
-                    <div style={{ marginTop: 12, background: 'var(--color-bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-success)', padding: 16, width: '100%', minWidth: 300 }}>
+                    <div style={{ marginTop: 12, background: 'var(--color-bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-success)', padding: 16, width: '100%' }}>
                       <div style={{ color: 'var(--color-success)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
                         <Sparkles size={20} /> {msg.widget.data.title}
                       </div>
@@ -190,7 +190,7 @@ export default function AIAssistantPage() {
                   )}
 
                   {msg.widget && msg.widget.type === 'PurchaseOrderForm' && (
-                    <div style={{ marginTop: 12, background: 'var(--color-bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border)', padding: 16, width: '100%', minWidth: 350 }}>
+                    <div style={{ marginTop: 12, background: 'var(--color-bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border)', padding: 16, width: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
                       <h4 style={{ marginBottom: 12, fontWeight: 600 }}>Create Purchase Order</h4>
                       
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -202,7 +202,7 @@ export default function AIAssistantPage() {
                             <select 
                               id={`product-${i}`}
                               className="form-input" 
-                              style={{ width: '100%' }}
+                              style={{ width: '100%', maxWidth: '100%', minWidth: 0, textOverflow: 'ellipsis', boxSizing: 'border-box' }}
                             >
                               <option value="">-- Choose Product --</option>
                               {msg.widget.data.products?.map((p: any) => (
@@ -216,7 +216,7 @@ export default function AIAssistantPage() {
                           <select 
                             id={`supplier-${i}`}
                             className="form-input" 
-                            style={{ width: '100%' }}
+                            style={{ width: '100%', maxWidth: '100%', minWidth: 0, textOverflow: 'ellipsis', boxSizing: 'border-box' }}
                           >
                             <option value="">-- Choose Supplier --</option>
                             {msg.widget.data.suppliers.map((sup: any) => (
@@ -230,7 +230,7 @@ export default function AIAssistantPage() {
                             id={`qty-${i}`}
                             type="number" 
                             className="form-input" 
-                            style={{ width: '100%' }}
+                            style={{ width: '100%', maxWidth: '100%', minWidth: 0, boxSizing: 'border-box' }}
                             defaultValue={100}
                           />
                         </div>
@@ -297,9 +297,8 @@ export default function AIAssistantPage() {
         </div>
 
         {/* Input */}
-        <div style={{
+        <div className="ai-input-container" style={{
           borderTop: '1px solid var(--color-border-light)',
-          padding: 'var(--space-base) var(--space-xl)',
           background: 'var(--color-bg-card)',
         }}>
           <div className="flex items-center gap-sm">
