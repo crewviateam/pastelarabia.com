@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const API_BASE = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : `${window.location.protocol}//${window.location.host}/api`);
+=======
+const API_BASE = 'https://pastel.crewvia.in/api';
+>>>>>>> 3101dcd9abaa25d0ecdf833fb764fb35608330ed
 
 class ApiError extends Error {
   status: number;
