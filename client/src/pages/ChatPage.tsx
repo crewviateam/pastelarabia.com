@@ -25,7 +25,8 @@ export default function ChatPage() {
 
     // Initialize WebSocket
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//localhost:3000/ws/chat`;
+    const host = window.location.hostname === 'localhost' ? 'localhost:3000' : window.location.host;
+    const wsUrl = `${protocol}//${host}/ws/chat`;
     const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {
