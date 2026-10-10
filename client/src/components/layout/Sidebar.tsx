@@ -52,7 +52,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean, onClose
     <aside className={`app-sidebar ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-brand" style={{ padding: '24px 20px 0px 20px', borderBottom: '1px solid var(--color-border)', paddingBottom: '16px' }}>
         <img 
-          src="http://pastelarabia.com/cdn/shop/files/logo-web-2_8f4ec679-b112-4844-8251-c731f207ff07.png" 
+          src="https://pastelarabia.com/cdn/shop/files/logo-web-2_8f4ec679-b112-4844-8251-c731f207ff07.png" 
           alt="Pastel Arabia Wholesale" 
           style={{ width: '100%', maxWidth: '180px', objectFit: 'contain' }}
         />

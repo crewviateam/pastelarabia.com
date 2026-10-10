@@ -18,7 +18,7 @@ export default function StoreLayout() {
         
         <Link to="/shop" style={{ textDecoration: 'none' }}>
           <img 
-            src="http://pastelarabia.com/cdn/shop/files/logo-web-2_8f4ec679-b112-4844-8251-c731f207ff07.png" 
+            src="https://pastelarabia.com/cdn/shop/files/logo-web-2_8f4ec679-b112-4844-8251-c731f207ff07.png" 
             alt="Pastel Arabia" 
             style={{ height: '36px' }}
           />

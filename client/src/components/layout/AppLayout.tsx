@@ -16,8 +16,8 @@ export default function AppLayout() {
     if (!user) return;
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const host = window.location.hostname === 'localhost' ? 'localhost:3000' : window.location.host;
-    const wsUrl = `${protocol}//${host}/ws/chat`;
+    const isLocal = window.location.hostname === 'localhost';
+    const wsUrl = isLocal ? `${protocol}//localhost:3000/ws/chat` : 'wss://pastel.crewvia.in/ws/chat';
     ws.current = new WebSocket(wsUrl);
 
     ws.current.onopen = () => {
